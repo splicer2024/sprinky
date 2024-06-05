@@ -1,0 +1,9 @@
+PinName	Num	IO	Callback
+addr0	3	OUT	
+addr1	5	OUT	
+addr2	7	OUT	
+addr3	11	OUT	
+sigEna	13	OUT	
+sigVal	15	OUT	
+powEna	12	OUT	
+flowSig	16	IN	COUNT
