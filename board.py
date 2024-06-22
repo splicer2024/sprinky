@@ -7,7 +7,7 @@ from util import *
 BOARD_CONFIG = os.path.dirname(__file__) + "/board_config.txt"
 
 #ToDo: Need to set this to number of pulses per liter
-PULSE_PER_LITER = 20
+PULSE_PER_LITER = 400
 
 #Counter on pulses received on an input (e.g. water meter)
 pulses = 0
@@ -114,9 +114,14 @@ def waterBedTime(bedNum,duration, enter):
 # Open High Side Valve and enable Power to Bed Valves
 def openHighSide():
     GPIO.output(pinLookup["powEna"],GPIO.HIGH)
+    time.sleep(1)
+    GPIO.output(pinLookup["powJump"],GPIO.HIGH)
+    time.sleep(1) # wait 1 second
+    GPIO.output(pinLookup["powJump"],GPIO.LOW)
  
 #Reset water meter 
 def clearWaterMeter():
+    global pulses
     pulses = 0
     
 #Read water meter    

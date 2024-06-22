@@ -17,7 +17,7 @@ RAIN_THRESHOLD = 6.0
 #other files can just pull the default logger and will log to this file with the correct format.
 logdate = datetime.datetime.now().strftime('%Y%m')
 log = logging.getLogger()
-logging.basicConfig(filename='log/' + logdate + '_watering.log', format='%(asctime)s %(message)s', datefmt='%Y/%m/%d-%H:%M:%S', level=logging.INFO)
+logging.basicConfig(filename= os.path.dirname(__file__) + '/log/' + logdate + '_watering.log', format='%(asctime)s %(message)s', datefmt='%Y/%m/%d-%H:%M:%S', level=logging.INFO)
 
 #read command line arguments
 parser = argparse.ArgumentParser()
@@ -49,9 +49,10 @@ boardSetup()
 
 # Enable Power to Bed Valves
 openHighSide()
+clearWaterMeter()
 
 #If manual bed / duration, just water that bed.
-if args.bed and (args.duration or args.enter) :
+if (args.bed is not None) and (args.duration or args.enter) :
     waterBedTime(args.bed, args.duration, args.enter)
     log.info('Manually watered bed ' + str(args.bed))
     log.info('It got ' + str(readWaterMeter()) + ' liters')

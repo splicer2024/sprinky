@@ -3,3 +3,4 @@ __pycache__/
 *$py.class
 *.log
 log/*.log
+weather_key.txt

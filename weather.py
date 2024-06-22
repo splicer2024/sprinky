@@ -1,17 +1,25 @@
 import requests
 import logging
+import os
 
 #Use openweathermap.org to get weather forecast.  This is a login
-#key generated for a free account on their site.  
-OPENWEATHER_KEY = '<Key Here>'
+#key generated for a free account on their site.
+weather_key_file = os.path.dirname(__file__) + "/weather_key.txt"
+
+def getWeatherKey(file_name):
+    f = open(file_name, "r")
+    key = f.read()
+    return(key.strip())
 
 #Latitude and Longitude of Sean's House
 LAT = '39.03'
 LON = '-77.38'
 
-#Request to fetch the forecast.  Returns 3 hour increment forecast for next 5 days.
-url = f'http://api.openweathermap.org/data/2.5/forecast?lat={LAT}&lon={LON}&appid={OPENWEATHER_KEY}'
 
+
+#Request to fetch the forecast.  Returns 3 hour increment forecast for next 5 days.
+OPENWEATHER_KEY = getWeatherKey(weather_key_file)
+url = f'http://api.openweathermap.org/data/2.5/forecast?lat={LAT}&lon={LON}&appid={OPENWEATHER_KEY}'
 
 #Make web request to get weather forecast.  Return the predicted milimeters of
 #precip in the next 24 hours.
