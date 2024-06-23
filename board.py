@@ -111,6 +111,40 @@ def waterBedTime(bedNum,duration, enter):
     
     log.info('Watering Done')
 
+# Water the specified bed for the specified time or enter key
+def waterBedVolume(bedNum,volume,duration, enter):
+    log = logging.getLogger()
+
+    if enter:
+        log.info('Watering bed ' + str(bedNum) + ' for manual duration')
+    else:
+        log.info('Watering bed ' + str(bedNum) + ' with ' + str(volume) +' liters for a maximum of ' + str(duration) + ' seconds')
+
+    #Connect Mux to the desired bed
+    connectMux(bedNum)
+
+    # Set sigVal high to open the valve to specified bed
+    GPIO.output(pinLookup["sigVal"],GPIO.HIGH)
+
+    #if user asked for manual enter key control, use that. Otherwise use watering duration.
+    if enter:
+        input("Bed " +str(bedNum) + " Powered... press Enter to Continue...")
+    else:
+        # wait until watering is complete
+        start_time = time.time()
+        # water for a maximum of duration seconds
+        while (time.time() < start_time + duration):
+            # stop if water meter reaches desired volume
+            if (readWaterMeter() >= volume):
+                break
+            time.sleep(0.5)
+
+    # Set sigVal low to close the valve to specified bed
+    GPIO.output(pinLookup["sigVal"],GPIO.LOW)
+
+    log.info('Watering Done')
+
+
 # Open High Side Valve and enable Power to Bed Valves
 def openHighSide():
     GPIO.output(pinLookup["powEna"],GPIO.HIGH)

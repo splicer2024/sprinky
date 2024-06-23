@@ -24,7 +24,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-sw", "--skip_weather", help="skip the intenet weather check for predicted precipitation", action='store_true')
 parser.add_argument("-e", "--enter", help="use enter key rather than duration to stop watering each bed", action='store_true')
 parser.add_argument("-b", "--bed", type=int, help="manually water a single bed. Requires -d  or -e as well")
-parser.add_argument("-d", "--duration", type=int, help="duration for manual watering.  Used with -b")
+parser.add_argument("-d", "--duration", type=int, help="duration for manual watering. Used with -b")
+parser.add_argument("-v", "--volume",type=int, help="volume for manual watering. Used with -d")
+
 args = parser.parse_args()
 
 # Start logging
@@ -51,9 +53,12 @@ boardSetup()
 openHighSide()
 clearWaterMeter()
 
-#If manual bed / duration, just water that bed.
-if (args.bed is not None) and (args.duration or args.enter) :
-    waterBedTime(args.bed, args.duration, args.enter)
+#If manual bed / duration / volume, just water that bed.
+if (args.bed is not None) and ((args.duration and args.volume) or args.enter) :
+    if (args.volume):
+        waterBedVolume(args.bed, args.volume, args.duration, args.enter)
+    else:
+        waterBedTime(args.bed, args.duration, args.enter)
     log.info('Manually watered bed ' + str(args.bed))
     log.info('It got ' + str(readWaterMeter()) + ' liters')
     
@@ -68,7 +73,7 @@ else:
             
             log.info('Starting bed ' + str(bed["Bed_Num"]))
     
-            waterBedTime(bed["Bed_Num"], bed["Duration"], args.enter)
+            waterBedVolume(bed["Bed_Num"], bed["Volume"], bed["Duration"], args.enter)
 
             log.info('Complted bed ' + str(bed["Bed_Num"]))
             log.info('It got ' + str(readWaterMeter()) + ' liters')
